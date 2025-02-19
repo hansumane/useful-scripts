@@ -56,6 +56,15 @@ _install () {
   cd -
 }
 
+if [ "$1" = "check" ] ; then
+  echo "$VIM_GIT_BRANCH"
+  if [ -d "$VIM_FOLDER" ] ; then
+    exit 0
+  else
+    exit 1
+  fi
+fi
+
 _get
 if [ ! -f "$VIM_FOLDER/_built" ] ; then _build ; fi
 if [ "$1" = "install" ] ; then _install ; fi

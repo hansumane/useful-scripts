@@ -166,8 +166,12 @@ _install ()
     fi
   fi
 
-  [ "x$INSTALL_WITH_SCRIPT" = "xy" ] && sudo syslinux-install_update -i -a -m
-  [ "x$INSTALL_SYNC" = "xy" ] && sync
+  if [ "x$INSTALL_WITH_SCRIPT" = "xy" ] ; then
+    sudo syslinux-install_update -i -a -m
+  fi
+  if [ "x$INSTALL_SYNC" = "xy" ] ; then
+    sync
+  fi
 }
 
 if [ $# -eq 0 ]; then

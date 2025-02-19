@@ -5,17 +5,38 @@ echo "$0: do not run"; exit 1
 efibootmgr
 
 # example how to create boot entry with efibootmgr
-efibootmgr --create --disk /dev/sdX --part Y --loader "\EFI\path\to\boot.efi" --label "Label"
+efibootmgr --create --disk /dev/sdX --part Y \
+           --loader "\EFI\path\to\boot.efi" --label "Label"
+efibootmgr -c -d /dev/sdX -p Y -l "\EFI\path\to\boot.efi" -L "Label"
 # /dev/sdX is a drive, and Y is an EFI system partition on it
 # if /dev/sdXY is mounted to /boot/efi, loaded path is relative to it,
 # so for /boot/efi/EFI/path/to/boot.efi loader if \EFI\path\to\boot.efi
 
 # example how to remove boot entry with efibootmgr
 efibootmgr --bootnum XXXX --delete-bootnum
+efibootmgr -b XXXX -B
 # where XXXX is an entry number
 
 # example how to change boot order
 efibootmgr --bootorder XXXX,YYYY,ZZZZ
+efibootmgr -o XXXX,YYYY,ZZZZ
+
+# ============================================================================ #
+# ============================================================================ #
+# ============================================================================ #
+
+# use bcfg (uefi shell) to view current entries
+bcfg boot dump
+
+# example how to create boot entry with bcfg (uefi shell)
+bcfg boot add N fsX:\EFI\path\to\boot.efi "Label"
+# N is a new boot entry order number
+# fsX is a filesystem identifier where \EFI\path\to\boot.efi is stored
+# (usually it is FS0, FS1, etc), it can be found with `map` uefi shell command
+
+# example how to remove boot entry with bcfg (uefi shell)
+bcfg boot rm N
+# N is a boot entry order number
 
 # ============================================================================ #
 # ============================================================================ #

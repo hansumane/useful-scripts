@@ -4,6 +4,8 @@ set -e
 # 'y' to enable or anything else to disable
 INSTALL_TO_SYSTEM=n
 INSTALL_TO_BOOT=n
+INSTALL_WITH_SCRIPT=n
+INSTALL_SYNC=n
 
 _top_dir="$PWD"
 _targets="bios efi64 efi32"
@@ -156,9 +158,16 @@ _install ()
                               "$_install_root"/usr/bin/syslinux-install_update
 
   if [ "x$INSTALL_TO_BOOT" = "xy" ] ; then
+    sudo rm -rf /boot/efi/EFI/syslinux
     sudo mkdir -p /boot/efi/EFI/syslinux
     sudo cp -rf "$_install_root"/usr/lib/syslinux/efi64/* /boot/efi/EFI/syslinux
+    if [ -f "$_top_dir"/syslinux.cfg ] ; then
+      sudo cp -f "$_top_dir"/syslinux.cfg /boot/efi/EFI/syslinux
+    fi
   fi
+
+  [ "x$INSTALL_WITH_SCRIPT" = "xy" ] && sudo syslinux-install_update -i -a -m
+  [ "x$INSTALL_SYNC" = "xy" ] && sync
 }
 
 if [ $# -eq 0 ]; then

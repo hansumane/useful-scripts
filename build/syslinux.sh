@@ -158,14 +158,16 @@ _install ()
                               "$_install_root"/usr/bin/syslinux-install_update
 
   if [ "x$INSTALL_TO_BOOT" = "xy" ] ; then
+    if [ -f /boot/efi/EFI/syslinux/syslinux.cfg ] ; then
+      sudo mv /boot/efi/EFI/syslinux/syslinux.cfg /tmp/syslinux.cfg.bak
+    fi
     sudo rm -rf /boot/efi/EFI/syslinux
     sudo mkdir -p /boot/efi/EFI/syslinux
     sudo cp -rf "$_install_root"/usr/lib/syslinux/efi64/* /boot/efi/EFI/syslinux
-    if [ -f "$_top_dir"/syslinux.cfg ] ; then
-      sudo cp -f "$_top_dir"/syslinux.cfg /boot/efi/EFI/syslinux
+    if [ -f /tmp/syslinux.cfg.bak ] ; then
+      sudo mv /tmp/syslinux.cfg.bak /boot/efi/EFI/syslinux/syslinux.cfg
     fi
   fi
-
   if [ "x$INSTALL_WITH_SCRIPT" = "xy" ] ; then
     sudo syslinux-install_update -i -a -m
   fi

@@ -69,18 +69,26 @@ sudo exportfs -arv && sudo systemctl restart nfs-server
 # ============================================================================ #
 # ============================================================================ #
 
-qemu-img create -f qcow2 -o size=32G alpine.qcow2
-qemu-system-x86_64 -enable-kvm \
-  -device virtio-net-pci,netdev=net0,mac=12:34:56:78:9A:BC \
-  -netdev bridge,id=net0,br=bremu \
-  -drive format=qcow2,file=alpine.qcow2 \
-  -cdrom alpine.iso
+qemu-img create -f qcow2 -o size=32G $DISK.qcow2
+sudo DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY \
+  qemu-system-x86_64 -enable-kvm -m $MEM -smp $NPROC \
+    '# for uefi (copy from /usr/share/qemu...)' \
+    -drive if=pflash,format=raw,readonly=on,file=ovmf-x86_64-code.bin \
+    -drive if=pflash,format=raw,file=ovmf-x86_64-vars.bin \
+    '# for bridged network' \
+    -device virtio-net-pci,netdev=net0,mac=12:34:56:78:9A:BC \
+    -netdev bridge,id=net0,br=$HOST_BRIDGE_NAME \
+    '# drive and cdrom' \
+    -drive format=qcow2,file=$DISK.qcow2 \
+    -cdrom distro.iso
 
 # ============================================================================ #
 
 modprobe nbd max_part=2
-qemu-nbd --connect=/dev/nbd0 alpine.qcow2
+qemu-nbd --connect=/dev/nbd0 $DISK1.qcow2
+qemu-nbd --connect=/dev/nbd1 $DISK2.qcow2
 mount /dev/nbd0p1 /path/to/mntpoint
+mount /dev/nbd1p1 /path/to/mntpoint
 
 # ============================================================================ #
 

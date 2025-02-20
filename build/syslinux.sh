@@ -29,24 +29,35 @@ _help ()
 {
   local _name="./$(basename "$0")"
   echo "$_name [arg1 [arg2 ...]]"
-  echo "  <no args> => do everything"
-  echo "  *"
-  echo "  a|e|n   => do nothing (useful for $_name a build install)"
-  echo "  clean   => clean everything"
+  echo "  a|e|n   => do nothing"
+  echo "  dist    => DELETES everything"
+  echo "  clean   => removes all binaries"
   echo "  setup   => clone syslinux repo and get patches"
-  echo "  build   => build everything (buggy if not first time)"
-  echo "  install => install (not in system root)"
+  echo "  build   => build everything"
+  echo "  install => install"
   echo "  *"
   echo "  build|install|buildinstall [arg1 [arg2 ...]] => multiple targets, e.g."
   echo "  $_name build efi64 => only build efi64"
   echo "  $_name install efi64 efi32 => only install efi64 and efi32"
   echo "  $_name buildinstall efi64 efi32 => build and install efi64 and efi32"
-  echo "  $_name a|e|n build install => build and install all targets"
+  echo "  *"
+  echo "  check INSTALL_* variables in $_name"
+}
+
+_dist ()
+{
+  rm -rf "$_top_dir"/syslinux-build
 }
 
 _clean ()
 {
-  rm -rf "$_top_dir"/syslinux-build
+  cd "$_top_dir"/syslinux-build/syslinux
+
+  local GIT_IGNORE_DIR_PATH="$(git rev-parse --show-toplevel)"
+  local GIT_IGNORE_FILE_PATH="$GIT_IGNORE_DIR_PATH/.gitignore"
+
+  cd "$GIT_IGNORE_DIR_PATH"
+  sudo rm -rf $(git ls-files --others --ignored --exclude-from="$GIT_IGNORE_FILE_PATH" --directory)
 }
 
 _setup ()
@@ -177,10 +188,7 @@ _install ()
 }
 
 if [ $# -eq 0 ]; then
-  _clean
-  _setup
-  _build
-  _install
+  _help
 else
   if [ $1 = '-h' ] || [ $1 = '--help' ]; then
     _help

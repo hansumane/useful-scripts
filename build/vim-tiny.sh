@@ -58,7 +58,7 @@ _install () {
 
 if [ "$1" = "check" ] ; then
   echo "$VIM_GIT_BRANCH"
-  if [ -d "$VIM_FOLDER" ] ; then
+  if [ -d "$VIM_FOLDER" ] || [ -f "$VIM_ARCHIVE" ] ; then
     exit 0
   else
     exit 1

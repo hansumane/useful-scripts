@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+# NOTE: replace C6C3-68D9 with UUID of the EFI partition,
+# where Syslinux is installed
+cat <<EOF
+if [ "\$grub_platform" = "efi" ] ; then
+	menuentry 'Syslinux' \$menuentry_id_option 'syslinux' {
+		insmod part_gpt
+		insmod fat
+		search --no-floppy --fs-uuid --set=root 'C6C3-68D9'
+		chainloader /EFI/syslinux/syslinux.efi
+	}
+fi
+EOF

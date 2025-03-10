@@ -38,6 +38,11 @@ bcfg boot add N fsX:\EFI\path\to\boot.efi "Label"
 bcfg boot rm N
 # N is a boot entry order number
 
+# choose filesystem in uefi shell
+fsX:
+# now run efi bootloader directly from uefi shell
+\EFI\path\to\boot.efi
+
 # ============================================================================ #
 # ============================================================================ #
 # ============================================================================ #

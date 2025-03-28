@@ -1,6 +1,14 @@
 #!/bin/sh
 echo "$0: do not run"; exit 1
 
+# split file into equal parts
+# will result in several files named $input_file_name.partaa, ...partab, ...partac, ...
+split -b $size $input_file_name $input_file_name.part
+
+# ============================================================================ #
+# ============================================================================ #
+# ============================================================================ #
+
 # use efibootmgr without arguments to list current entries
 efibootmgr
 

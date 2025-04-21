@@ -1,6 +1,14 @@
 #!/bin/sh
 echo "$0: do not run"; exit 1
 
+# fix libvirtd/lxc for OpenSUSE
+# requires PROC_CHILDREN, CGROUP_BPF, POSIX_MQUEUE configs to be enabled
+sudo systemctl set-property libvirtd MemoryLow=512M
+
+# ============================================================================ #
+# ============================================================================ #
+# ============================================================================ #
+
 # split file into equal parts
 # will result in several files named $input_file_name.partaa, ...partab, ...partac, ...
 split -b $size $input_file_name $input_file_name.part

@@ -22,6 +22,19 @@ CFGFLAGS="--prefix=$VIM_PREFIX \
           --disable-terminal \
           --disable-canberra \
           --disable-libsodium"
+for arg in $@ ; do
+  if [ "$arg" = 'full' ] ; then
+    echo 'Build "full"'
+    CFGFLAGS="--prefix=$VIM_PREFIX \
+              --with-features=huge \
+              --enable-multibyte \
+              --enable-largefile \
+              --enable-fail-if-missing \
+              --enable-cscope \
+              --disable-netbeans \
+              --enable-gui=no"
+  fi
+done
 
 _get () {
   if [ ! -d "$VIM_FOLDER" ] ; then
@@ -51,8 +64,15 @@ _install () {
   cd "$VIM_FOLDER"
   sudo make install
   if [ ! -f "$VIM_PREFIX/bin/vi" ] ; then
-    sudo ln -srf "$VIM_PREFIX/bin/vim" "$VIM_PREFIX/bin/vi"
+    sudo ln -srvf "$VIM_PREFIX/bin/vim" "$VIM_PREFIX/bin/vi"
   fi
+  cd -
+}
+
+_uninstall () {
+  cd "$VIM_FOLDER"
+  sudo make uninstall
+  sudo rm -rvf "$VIM_PREFIX/bin/vi"
   cd -
 }
 
@@ -67,4 +87,5 @@ fi
 
 _get
 if [ ! -f "$VIM_FOLDER/_built" ] ; then _build ; fi
-if [ "$1" = "install" ] ; then _install ; fi
+for arg in $@ ; do if [ "$arg" = 'install' ] ; then _install ; exit 0 ; fi ; done
+for arg in $@ ; do if [ "$arg" = 'uninstall' ] ; then _uninstall ; exit 0 ; fi ; done

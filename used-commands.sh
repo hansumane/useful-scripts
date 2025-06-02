@@ -1,6 +1,13 @@
 #!/bin/sh
 echo "$0: do not run"; exit 1
 
+# ============================================================================ #
+# ============================================================================ #
+# ============================================================================ #
+
+# extract dtbs from FIT-image. u-boot-tools(1) required!
+dumpimage -T flat_dt -p $N -o $out.bin $file.itb
+
 # fix libvirtd/lxc for OpenSUSE
 # requires PROC_CHILDREN, CGROUP_BPF, POSIX_MQUEUE configs to be enabled
 sudo systemctl set-property libvirtd MemoryLow=512M

@@ -33,7 +33,7 @@ for arg in $@ ; do
               --enable-cscope \
               --disable-netbeans \
               --enable-gui=no \
-              --with-x=no"
+              --with-x=yes"
   fi
 done
 

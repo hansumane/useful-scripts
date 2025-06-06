@@ -56,7 +56,7 @@ _get () {
 _build () {
   cd "$VIM_FOLDER"
   CFLAGS="$CFLAGS" ./configure $CFGFLAGS
-  make
+  make -j$(getconf _NPROCESSORS_ONLN)
   touch "_built"
   cd -
 }
@@ -85,6 +85,8 @@ if [ "$1" = "check" ] ; then
     exit 1
   fi
 fi
+
+for arg in $@ ; do if [ "$arg" = 'check' ] ; then echo "$VIM_GIT_BRANCH" ; exit 0 ; fi ; done
 
 _get
 if [ ! -f "$VIM_FOLDER/_built" ] ; then _build ; fi

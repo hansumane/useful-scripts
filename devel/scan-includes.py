@@ -69,13 +69,13 @@ def main(args: list[str]):
                 includes.add(arg)
 
             elif arg.startswith("-DKBUILD_BASENAME"):
-                defines.add("-DKBUILD_BASENAME='\"{module_basename}\"'")
+                defines.add("-DKBUILD_BASENAME=\"MODULE_BASENAME\"")
             elif arg.startswith("-DKBUILD_MODFILE"):
-                defines.add("-DKBUILD_MODFILE='\"{path/to/module_file}\"'")
+                defines.add("-DKBUILD_MODFILE=\"path/to/MODULE_FILE\"")
             elif arg.startswith("-DKBUILD_MODNAME"):
-                defines.add("-DKBUILD_MODNAME='\"{module_name}\"'")
+                defines.add("-DKBUILD_MODNAME=\"MODULE_NAME\"")
             elif arg.startswith("-D__KBUILD_MODNAME"):
-                defines.add("-D__KBUILD_MODNAME='\"kmod_{module_name}\"'")
+                defines.add("-D__KBUILD_MODNAME=kmod_MODULE_NAME")
             elif arg.startswith("-D"):
                 defines.add(arg)
 
